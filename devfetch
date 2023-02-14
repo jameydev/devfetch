@@ -1,0 +1,167 @@
+#!/bin/bash
+
+# Versions and paths
+
+# Python
+PYV=`python --version`
+PYPATH=`which python`
+PIPV=`pip --version`
+PIPATH=`which pip`
+PPKGS=`pip list`
+
+# Nodejs
+NODEV=`node --version`
+NODEPATH=`which node`
+
+NPMV=`npm --version`
+NPMPATH=`which npm`
+GNPM=`npm list -g`
+
+# Rust
+RSV=`rustc --version`
+RSPATH=`which rustc`
+CARGOV=`cargo --version`
+CARGPATH=`which cargo`
+
+# Java
+JAVAV=`java --version`
+JAVAPATH=`which java`
+
+# C/C++
+GNUCV=`gcc --version`
+GPATH=`which gcc && which g++`
+CLANGV=`clangd --version`
+CLPATH=`which clangd`
+
+# Ruby
+RBV=`ruby --version`
+RBPATH=`which ruby`
+
+# Git
+GITV=`git --version`
+GITPATH=`which git`
+
+# Text Editors
+NVIMV=`nvim --version`
+NVPATH=`which nvim`
+
+VSCV=`code --version`
+VSCPATH=`which code`
+
+# Display usage message
+function show_usage {
+	echo -e "\nUsage: devfetch [OPTION]\n"
+	echo "OPTION can be:"
+	echo "-a: list everything about your development environment (could take awhile!)"
+	echo "-n: list information about nodejs"
+	echo "-p: list information about python"
+	echo "-j: list information about java"
+	echo "-c: list information about C/C++"
+	echo "-rs: list information about rust"
+	echo "-rb: list information about ruby"
+	echo "-e: list information about editors/IDEs"
+	echo "-h: show this usage message (default)"
+	printf "\nExample:\n$ $0 -n\n"
+	js_list	
+}
+
+function list_all {
+	printf "\n~~Your Development Environment~~\n"
+	pylist
+	js_list
+	cpp_list
+	java_list
+	rust_list
+	ruby_list
+	editor_list
+	git_info
+}
+
+function pylist {
+	printf "\n====Python Development====\n"
+	printf "Python: ${PYV} @ ${PYPATH}\n"
+	
+	printf "pip: ${PIPV} @ ${PIPATH}\n"
+
+	printf "\nGlobal pip packages:\n"
+	printf "================================\n"
+	printf "${PPKGS}\n"
+}
+
+function js_list {
+	printf "\n====JavaScript Development====\n"
+	printf "Node.js: ${NODEV} @ ${NODEPATH}\n"
+	printf "npm: ${NPMV} @ ${NPMPATH}\n"
+	printf "\nGlobal npm packages:\n"
+	printf "${GNPM}\n"
+}
+
+function java_list {
+	echo "====Java Development===="
+	echo "Java: ${JAVAV}"
+	echo -e "Location on disk: ${JAVAPATH}\n"
+}
+
+function cpp_list { 
+	echo "====C & C++ Development===="
+	echo "Gnu C/C++ compilers: ${GNUCV} @ ${GPATH}\n"
+	echo "Clang: ${CLANGV} @ ${CLPATH}"
+}
+
+function rust_list {
+	echo -e "\n====Rust Development====\n"
+	echo "Rust: ${RSV} @ ${RSPATH}"
+	echo "Cargo: ${CARGOV} @ ${CARGPATH}"
+}
+
+function ruby_list {
+	printf "\n====Ruby Development====\n"
+	printf "${RBV} @ ${RBPATH}\n"
+}
+
+function editor_list {
+	echo "====Source Code Editors===="
+	echo "Neovim: ${NVIMV} @ ${NVPATH}"
+	echo "Visual Studio Code: ${VSCV} @ ${VSCPATH}"
+}
+
+function git_info {
+	echo "====Git Information===="
+	echo "Git: ${GITV} @ ${GITPATH}"
+}
+
+# Setup
+args=$1
+
+function main {
+	if [[ "$args" == "-a" ]];
+	then
+		list_all
+	elif [[ "$args" == "-n" ]];
+	then
+		js_list
+	elif [[ "$args" == "-p" ]];
+	then
+		pylist
+	elif [[ "$args" == "-j" ]];
+	then
+		java_list
+	elif [[ "$args" == "-c" ]];
+	then
+		cpp_list
+	elif [[ "$args" == "-e" ]];
+	then
+		editor_list
+	elif [[ "$args" == "-rs" ]];
+	then 
+		rust_list
+	elif [[ "$args" == "-rb" ]];
+	then
+		ruby_list
+	else
+		show_usage
+	fi
+}
+
+# run the script
+main

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+today=$(date +%m-%d-%Y)
+FILE="/home/jamey/log/internet_speed/${today}_speed_test.log"
+
+if [ -f "$FILE" ]; then
+	speedtest >> "$FILE" &
+else
+	speedtest > "$FILE" &
+fi
+echo "Network speed-test started!"
+

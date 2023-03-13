@@ -1,0 +1,24 @@
+#!/bin/bash
+# Set these if you don't want to choose a path and ip every time
+LOGFILE="/home/jamey/log/local_network/nmap_LAN.log" # use whatever location you want to log to
+
+IP="192.168.1.0/24" # note that this is the private IP of the gateway and the /24 subnet
+# sudo nmap -v -O -T5 192.168.1.0/24 >> "$LOGFILE" # you could customize the nmap command
+
+function main {
+	if [[ "$1" != "" ]]; then
+		if [ -f "$1" ]; then
+			LOGFILE="$1"
+		# the below regex checks that it is an IP address with CIDR block /16 or /24
+		elif [[ "$1" =~ "^([0-9]{1,3}\.){3}[0-9]{1,3}($|/(16|24))$" ]]; then
+			IP="$1"
+		else
+			echo "Provided argument is not a file or ip address"
+		fi
+	fi
+
+	nmap -v -O -T5 "$IP" >> ${LOGFILE} &
+	echo "Started Nmap on ${IP} and logging it to: ${LOGFILE}"
+}
+
+main
